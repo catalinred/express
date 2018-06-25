@@ -1,0 +1,16 @@
+doctype html
+html(lang="en")
+  head
+    //- page specific vars
+    block vars
+    //- header stuff
+    block header
+      meta(charset = "utf-8")
+      title #{page.title}
+      meta(name = "description", content = page.description)
+      meta(name = "viewport", content = "width=device-width, initial-scale=1")
+  body
+    //- actual content
+    block content
+    //- common stuff
+    block footer

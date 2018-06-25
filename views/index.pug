@@ -1,1 +1,11 @@
-h1 Hello world!
+extends templates/base
+
+block vars
+  -
+    page = {
+      title: "Hello world from Express.js",
+      description: "This is my Express.js app using pug.js as template engine."
+    }
+
+block content
+  h1 Hello world!
