@@ -12,19 +12,22 @@ app.get('/', (req, res) => {
   res.render('index')
 })
 
-// https://github.com/GoogleChrome/lighthouse/blob/master/docs/readme.md
-function launchChromeAndRunLighthouse(url, opts, config = null) {
-  return chromeLauncher.launch({chromeFlags:["--headless"] }).then(chrome => {
-    opts.port = chrome.port;
-    return lighthouse(url, opts, config).then(results => {
-      return chrome.kill().then(() => results.lhr)
-    });
+// https://github.com/GoogleChrome/lighthouse/blob/master/docs/headless-chrome.md#running-lighthouse-using-headless-chrome
+function launchChromeAndRunLighthouse(url, flags = {}, config = null) {
+  return chromeLauncher.launch(flags).then(chrome => {
+    flags.port = chrome.port;
+    return lighthouse(url, flags, config).then(results =>
+      chrome.kill().then(() => results));
   });
 }
 
+const flags = {
+  chromeFlags: ['--headless', '--disable-gpu', '--no-sandbox'],
+  onlyCategories: ['accessibility']
+};
+
 app.get('/lighthouse/:site', function (req, res) {
   const site = req.params.site;
-  const flags = {onlyCategories: ['accessibility']};
 
   launchChromeAndRunLighthouse(site, flags).then( results => {
     res.send(results);
